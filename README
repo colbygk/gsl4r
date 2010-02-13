@@ -1,0 +1,55 @@
+== Description
+
+GSL4r
+Ruby GNU Scientific Library via FFI
+
+The Foreign Function Interface allows for run-time bindings to shared libraries. Using FFI to interface between Ruby and other libraries written in other languages makes these libraries runnable across all Ruby interpreters that have FFI capabilties (MRI, JRuby, etc...).
+
+This avoids the complications with implementation specific C extensions or Java Native Interfaces in the case of JRuby.
+
+== Documentation
+
+This project is currently in its alpha stages and as of 11 Feb 2010, I have only pushed a library for using Complex functions in GSL.
+
+== Getting Started
+
+Right now you can look at the existing project by cloning the GIT repository via:
+
+git clone git://rubyforge.org/gsl4r.git
+
+== Installing gsl4r
+
+There is no installation available at this time.
+
+== Examples
+
+cd gsl4r/lib
+irb -r gsl4r
+irb(main):001:0> require 'gsl4r/complex'
+=> true
+irb(main):002:0> include GSL4r
+=> Object
+irb(main):004:0> a=GSL_Complex.create(1,1)
+=> (1.0,1.0)
+irb(main):005:0> b=GSL_Complex.create(2,2)
+irb(main):009:0> a.abs
+=> 1.4142135623731
+irb(main):012:0> b.add(a)
+=> (3.0,3.0)
+irb(main):013:0> a.logabs
+=> 0.346573590279973
+irb(main):014:0> a.gsl_complex_logabs
+=> 0.346573590279973
+irb(main):016:0> include GSL4r::Complex::Methods
+=> Object
+irb(main):015:0> gsl_complex_add(a,b)
+=> (3.0,3.0)
+
+== Questions and/or Comments
+
+Feel free to email {Colby Gutierrez-Kraybill}[mailto:colby@astro.berkeley.edu] with any questions.
+
+== Copyright
+
+See LICENSE and LICENSE.LPGLv3
+
