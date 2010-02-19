@@ -1,0 +1,22 @@
+== Install
+
+Options to install,
+
+	
+local gem file using rake:
+
+  rake install
+
+System wide gem install using rake
+
+  sudo rake install
+
+
+You must also update your environment so that GSL4r can find the gsl shared library, under Mac OS X, and using macports, this is something along the lines of:
+
+export LD_LIBRARY_PATH=/opt/local/lib:$LD_LIBRARY_PATH
+
+Under linux, it might look something like,
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
