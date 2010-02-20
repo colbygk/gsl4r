@@ -20,10 +20,11 @@ module GSL4r
       attach_function method_name, args, return_var
 
       if ( args_type != nil )
-        # prepare c args code
+        # prepare c and ruby args code
 	c_src = ""
 	c_call_vars = []
 	c_return_name = "c_r#{$c_var_num}"
+	r_src = []
         args_type.each { |a_t|
 	  c_var_name = "v#{$c_var_num += 1}"
 	  c_src << (a_t.respond_to?("c_type") ?
@@ -31,6 +32,9 @@ module GSL4r
 	  c_src << (a_t.respond_to?("c_assignment") ?
 		    "  #{a_t.c_assignment("#{c_var_name}")}\n" : "= (#{a_t.to_s})1.0;\n")
 	  c_call_vars << "#{c_var_name}"
+
+	  r_src << (a_t.respond_to?("r_assignment") ?
+		    "  #{a_t.r_assignment("#{c_var_name}")}" : "= 1.0")
 	} # args_type.each
 
 	# prepare c return type
@@ -43,12 +47,20 @@ module GSL4r
 	
 	# now generate the ruby code for the unit test
 	c_src << "  puts(" << %Q{\\"def test_#{method_name}()\\"} << ");\n"
-	c_src << "  puts("
-	c_src << %Q{\\"  r_r1 = #{method_name}(#{c_call_vars.join(",")})\\"} << ");\n"
+
+	# TODO, Need to insert ruby object instantiation code here!
+	#
+	r_src.each { |v|
+	  c_src << "  puts(" << %Q{\\"#{v}\\"} << ");\n"
+	}
+
+	r_r1 = "r_r1" # ruby result
+	c_src << "  puts(" << %Q{\\"  #{r_r1} = ::#{self.to_s}::#{method_name}(#{c_call_vars.join(",")})\\"} << ");\n"
 	if ( return_type.respond_to?("c_to_r_assignment") )
-	  c_src << "  puts(" << %Q{\\"  r_r2 = #{return_type.r_type}.new\\"} << ");\n"
-	  c_src << "  puts(" << %Q{\\"  ::#{return_type}.c_to_r_assignment(r_r2,#{c_return_name}\\"} << ");\n"
-	  c_src << "  printf(" << %Q{\\"  assert #{return_type.to_s}.r_equals(r_r1,r_r2)\\\\n\\"} << ");\n"
+	  r_r2 = "r_r2" # ruby result comparitor
+	  c_src << "  puts(" << %Q{\\"  #{r_r2} = #{return_type.r_type}.new\\"} << ");\n"
+	  c_src << "  #{return_type.c_to_r_assignment(r_r2,c_return_name)}"
+	  c_src << "  printf(" << %Q{\\"  assert r_r1.equals(r_r2)\\\\n\\"} << ");\n"
 	else
 	  c_src << "  printf(" << %Q{\\"  assert_in_delta r_r1, %.15g, EPSILON\\\\n\\"} << ", #{c_return_name});\n"
 	end

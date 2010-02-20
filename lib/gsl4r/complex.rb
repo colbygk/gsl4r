@@ -53,6 +53,8 @@ module GSL4r
 	  myComplex.set( r, i )
 	end
 
+	# the r_ and c_ methods are designed to help automate the building
+	# of tests and not for use in general
 	def r_type()
 	  "GSL_Complex"
 	end
@@ -61,12 +63,12 @@ module GSL4r
 	  "#{v1.to_s}.equals(#{v2.to_s})"
 	end
 
-	def r_assignment( r,i )
-	  "set(#{r}, #{i})"
+	def r_assignment( name )
+	  "#{name}.set(1.0,1.0)" # these numbers should make c_assignment for the test
 	end
 
 	def c_to_r_assignment(v1,v2)
-	  "#{v1.to_s}.set(GSL_REAL(#{v2.to_s}),GSL_IMAG(#{v2.to_s}))"
+	  "printf(\\\"  #{v1}.set(%g,%g)\\\\n\\\",GSL_REAL(#{v2}),GSL_IMAG(#{v2}));\\n"
 	end
 
 	def c_type()
@@ -182,6 +184,7 @@ module GSL4r
       include ::GSL4r::Harness
 
       def initialize
+	@c_compiler = "gcc"
 	@c_src_name = "gsl_complex_tests_gen.c"
 	@c_binary = "gsl_complex_tests_gen"
 	@c_includes = ["gsl/gsl_complex.h","gsl/gsl_complex_math.h"]
