@@ -25,6 +25,9 @@ module GSL4r
 	c_call_vars = []
 	c_return_name = "c_r#{$c_var_num}"
 	r_src = []
+	if ( ! args_type.is_a?(Array) )
+	  args_type = Array.new([args_type])
+	end
         args_type.each { |a_t|
 	  c_var_name = "v#{$c_var_num += 1}"
 	  c_src << (a_t.respond_to?("c_type") ?
@@ -33,8 +36,10 @@ module GSL4r
 		    "  #{a_t.c_assignment("#{c_var_name}")}\n" : "= (#{a_t.to_s})1.0;\n")
 	  c_call_vars << "#{c_var_name}"
 
+	  r_src << (a_t.respond_to?("r_type") ?
+		    "  #{c_var_name} = #{a_t.r_type}.create" : "")
 	  r_src << (a_t.respond_to?("r_assignment") ?
-		    "  #{a_t.r_assignment("#{c_var_name}")}" : "= 1.0")
+		    "  #{a_t.r_assignment("#{c_var_name}")}" : "  #{c_var_name} = 1.0")
 	} # args_type.each
 
 	# prepare c return type

@@ -1,4 +1,3 @@
-
 #
 # == Other Info
 #
@@ -43,6 +42,16 @@ module GSL4r
       R = 0
       I = 1
 
+      #def initialize( a )
+	#super()
+	#self[:dat][R] = a[:dat][R]
+	#self[:dat][I] = a[:dat][I]
+      #end
+      #def initialize( r, i )
+	#super()
+	#self[:dat][R] = r
+	#self[:dat][I] = i
+      #end
       # Create a factory method, as the initialize functions have some
       # issues when copies are created, probably in by_value specifically
       # TODO: followup with Wayne Meissner to confirm this
@@ -114,7 +123,8 @@ module GSL4r
       end
 
       def equals( a )
-	return ( a[:dat][R] == self[:dat][R] && a[:dat][I] == self[:dat][I] )
+	return ( (a[:dat][R] - self[:dat][R]).abs < EPSILON &&
+		(a[:dat][I] - self[:dat][I]).abs < EPSILON )
       end
 
       def set( r, i )
@@ -190,6 +200,10 @@ module GSL4r
 	@c_includes = ["gsl/gsl_complex.h","gsl/gsl_complex_math.h"]
 	@c_libs = ["-lgsl"]
 	@c_tests = ::GSL4r::Complex::Methods.methods.grep(/^c_test/)
+	@r_header = %Q{$: << File.join('..','lib')\\nrequire 'test/unit'\\nrequire 'test/unit/autorunner'\\nrequire 'gsl4r/complex'\\ninclude GSL4r::Complex\\nclass ComplexTests < Test::Unit::TestCase\\n  EPSILON = 5.0e-15}
+
+	@r_footer = %Q{end}
+
       end # setup_tests
     end
 
@@ -235,15 +249,15 @@ module GSL4r
 
       # Returns the difference of the complex numbers a and b, z=a-b
       attach_gsl_function :gsl_complex_sub, Array.new(2, GSL_Complex.by_value),
-	GSL_Complex.by_value
+	GSL_Complex.by_value, Array.new(2, GSL_Complex), GSL_Complex
 
       # Returns the product of the complex numbers a and b, z=ab
       attach_gsl_function :gsl_complex_mul, Array.new(2, GSL_Complex.by_value),
-	GSL_Complex.by_value
+	GSL_Complex.by_value, Array.new(2, GSL_Complex), GSL_Complex
 
       # Returns the quotient of the complex numbers a and b, z=a/b
       attach_gsl_function :gsl_complex_div, Array.new(2, GSL_Complex.by_value),
-	GSL_Complex.by_value
+	GSL_Complex.by_value, Array.new(2, GSL_Complex), GSL_Complex
 
       # Returns the sum of the complex number a and the real number x, z=a+x
       attach_gsl_function :gsl_complex_add_real, [ GSL_Complex.by_value, :double ],
@@ -251,43 +265,43 @@ module GSL4r
 
       # Returns the difference of the complex number a and the real number x, z=a-x
       attach_gsl_function :gsl_complex_sub_real, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the product of the complex number a and the real number x, z=ax
       attach_gsl_function :gsl_complex_mul_real, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the quotient of the complex number a and the real number x, z=a/x
       attach_gsl_function :gsl_complex_div_real, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the sum of the complex number a and the imaginary number iy, z=a+iy
       attach_gsl_function :gsl_complex_add_imag, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the difference of the complex number a and the imaginary number iy, z=a-iy
       attach_gsl_function :gsl_complex_sub_imag, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the product of the complex number a and the imaginary number iy, z=a*iy
       attach_gsl_function :gsl_complex_mul_imag, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the quotient of the complex number a and the imaginary number iy, z=a/iy
       attach_gsl_function :gsl_complex_div_imag, [ GSL_Complex.by_value, :double ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, [ GSL_Complex, :double], GSL_Complex
 
       # Returns the complex conjugate of the complex number z, z^* = x-iy
       attach_gsl_function :gsl_complex_conjugate, [ GSL_Complex.by_value ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, GSL_Complex, GSL_Complex
 
       # Returns the inverse, or reciprocal, of the complex number z, 1/z = (x-iy)/(x^2 + y^2)
       attach_gsl_function :gsl_complex_inverse, [ GSL_Complex.by_value ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, GSL_Complex, GSL_Complex
 
       # Returns the negative of the complex number z, -z = (-x) + i(-y)
       attach_gsl_function :gsl_complex_negative, [ GSL_Complex.by_value ],
-	GSL_Complex.by_value
+	GSL_Complex.by_value, GSL_Complex, GSL_Complex
 
     end
   end
