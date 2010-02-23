@@ -73,11 +73,11 @@ module GSL4r
 	end
 
 	def r_assignment( name )
-	  "#{name}.set(1.0,1.0)" # these numbers should make c_assignment for the test
+	  "#{name}.set(2.0,2.0)" # these numbers should make c_assignment for the test
 	end
 
 	def c_to_r_assignment(v1,v2)
-	  "printf(\\\"  #{v1}.set(%g,%g)\\\\n\\\",GSL_REAL(#{v2}),GSL_IMAG(#{v2}));\\n"
+	  "printf(\\\"  #{v1}.set(%.15g,%.15g)\\\\n\\\",GSL_REAL(#{v2}),GSL_IMAG(#{v2}));\\n"
 	end
 
 	def c_type()
@@ -85,7 +85,7 @@ module GSL4r
 	end
 
 	def c_assignment( name )
-	  "GSL_SET_COMPLEX(&#{name}, 1.0, 1.0);"
+	  "GSL_SET_COMPLEX(&#{name}, 2.0, 2.0);"
 	end
 
 	def c_equals()
@@ -220,7 +220,7 @@ module GSL4r
 
       extend ::FFI::Library
 
-      ffi_lib 'gsl'
+      ffi_lib GSL4r::GSL_LIB_PATH
 
       # Returns the argument of the complex number z, arg(z), where -pi < arg(z) <= pi
       attach_gsl_function :gsl_complex_arg, [ GSL_Complex.by_value ], :double,
@@ -241,7 +241,7 @@ module GSL4r
       # of precision in this case
       attach_gsl_function :gsl_complex_logabs, [ GSL_Complex.by_value ], :double
 
-      # Arithmetic operators
+      # 5.3 Arithmetic operators
 
       # Returns the sum of the complex numbers a and b, z=a+b
       attach_gsl_function :gsl_complex_add, Array.new(2, GSL_Complex.by_value),
@@ -302,6 +302,21 @@ module GSL4r
       # Returns the negative of the complex number z, -z = (-x) + i(-y)
       attach_gsl_function :gsl_complex_negative, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, GSL_Complex, GSL_Complex
+
+      # 5.4 Elementary Complex Functions
+      
+      # This function returns the square root of the complex number z, √z.
+      # The branch cut is the negative real axis. The result always lies
+      # in the right half of the complex plane.
+      attach_gsl_function :gsl_complex_sqrt, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, GSL_Complex, GSL_Complex
+
+
+      # This function returns the complex square root of the real number x,
+      # where x may be negative.
+      attach_gsl_function :gsl_complex_sqrt_real, [ :double ],
+	GSL_Complex.by_value, :double, GSL_Complex
+
 
     end
   end

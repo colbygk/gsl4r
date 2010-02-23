@@ -33,13 +33,13 @@ module GSL4r
 	  c_src << (a_t.respond_to?("c_type") ?
 		    "  #{a_t.c_type} #{c_var_name};\n" : "#{a_t.to_s} #{c_var_name} ")
 	  c_src << (a_t.respond_to?("c_assignment") ?
-		    "  #{a_t.c_assignment("#{c_var_name}")}\n" : "= (#{a_t.to_s})1.0;\n")
+		    "  #{a_t.c_assignment("#{c_var_name}")}\n" : "= (#{a_t.to_s})2.0;\n")
 	  c_call_vars << "#{c_var_name}"
 
 	  r_src << (a_t.respond_to?("r_type") ?
 		    "  #{c_var_name} = #{a_t.r_type}.create" : "")
 	  r_src << (a_t.respond_to?("r_assignment") ?
-		    "  #{a_t.r_assignment("#{c_var_name}")}" : "  #{c_var_name} = 1.0")
+		    "  #{a_t.r_assignment("#{c_var_name}")}" : "  #{c_var_name} = 2.0")
 	} # args_type.each
 
 	# prepare c return type
