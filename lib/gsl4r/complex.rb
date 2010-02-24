@@ -198,13 +198,13 @@ module GSL4r
 	@c_src_name = "gsl_complex_tests_gen.c"
 	@c_binary = "gsl_complex_tests_gen"
 	@c_includes = ["gsl/gsl_complex.h","gsl/gsl_complex_math.h"]
-	@c_libs = ["-lgsl"]
+	@c_flags = [`gsl-config --libs`.chomp,`gsl-config --cflags`.chomp]
 	@c_tests = ::GSL4r::Complex::Methods.methods.grep(/^c_test/)
 	@r_header = %Q{$: << File.join('..','lib')\\nrequire 'test/unit'\\nrequire 'test/unit/autorunner'\\nrequire 'gsl4r/complex'\\ninclude GSL4r::Complex\\nclass ComplexTests < Test::Unit::TestCase\\n  EPSILON = 5.0e-15}
 
 	@r_footer = %Q{end}
 
-      end # setup_tests
+      end # Complex::Harness
     end
 
     class GSL_Complex_float < GSL_Complex
