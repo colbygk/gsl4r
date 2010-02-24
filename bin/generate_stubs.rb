@@ -25,7 +25,7 @@ def split_prototype( prototype )
     argtypes << type_info
   }
   return_type,method_name = prototype.split(" ")
-  return method_name, argtypes, return_type, "/#{comment}/"
+  return method_name, argtypes, return_type, "#{comment}".gsub("\*","")
 end
 
 implsubsmap = {
@@ -53,8 +53,8 @@ ARGV.each do |file|
       c_args = c_args.chop.chop + " ]"
       r_args = r_args.chop.chop + " ]"
 
-      puts "#{comment}"
-      puts "attach_gsl_function :#{method_name}, #{c_args}, #{c_return}, #{r_args}, #{r_return}"
+      puts "# #{comment}"
+      puts "attach_gsl_function :#{method_name}, #{c_args},\n #{c_return}, #{r_args}, #{r_return}"
     end
   end
 end

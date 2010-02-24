@@ -318,6 +318,117 @@ module GSL4r
 	GSL_Complex.by_value, :double, GSL_Complex
 
 
+      #  r= r e^(i theta) 
+      attach_gsl_function :gsl_complex_polar, [ :double, :double ],
+	GSL_Complex.by_value, [ :double, :double ], GSL_Complex
+      #  r=a^b 
+      attach_gsl_function :gsl_complex_pow, [ GSL_Complex.by_value, GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex, GSL_Complex ], GSL_Complex
+      #  r=a^b 
+      attach_gsl_function :gsl_complex_pow_real, [ GSL_Complex.by_value, :double ],
+	GSL_Complex.by_value, [ GSL_Complex, :double ], GSL_Complex
+      #  r=exp(a) 
+      attach_gsl_function :gsl_complex_exp, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=log(a) (base e) 
+      attach_gsl_function :gsl_complex_log, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=log10(a) (base 10) 
+      attach_gsl_function :gsl_complex_log10, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=log_b(a) (base=b) 
+      attach_gsl_function :gsl_complex_log_b, [ GSL_Complex.by_value, GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex, GSL_Complex ], GSL_Complex
+      #  r=sin(a) 
+      attach_gsl_function :gsl_complex_sin, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=cos(a) 
+      attach_gsl_function :gsl_complex_cos, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=sec(a) 
+      attach_gsl_function :gsl_complex_sec, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=csc(a) 
+      attach_gsl_function :gsl_complex_csc, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=tan(a) 
+      attach_gsl_function :gsl_complex_tan, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=cot(a) 
+      attach_gsl_function :gsl_complex_cot, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arcsin(a) 
+      attach_gsl_function :gsl_complex_arcsin, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arcsin(a) 
+      attach_gsl_function :gsl_complex_arcsin_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arccos(a) 
+      attach_gsl_function :gsl_complex_arccos, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccos(a) 
+      attach_gsl_function :gsl_complex_arccos_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arcsec(a) 
+      attach_gsl_function :gsl_complex_arcsec, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arcsec(a) 
+      attach_gsl_function :gsl_complex_arcsec_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arccsc(a) 
+      attach_gsl_function :gsl_complex_arccsc, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccsc(a) 
+      attach_gsl_function :gsl_complex_arccsc_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arctan(a) 
+      attach_gsl_function :gsl_complex_arctan, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccot(a) 
+      attach_gsl_function :gsl_complex_arccot, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=sinh(a) 
+      attach_gsl_function :gsl_complex_sinh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=coshh(a) 
+      attach_gsl_function :gsl_complex_cosh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=sech(a) 
+      attach_gsl_function :gsl_complex_sech, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=csch(a) 
+      attach_gsl_function :gsl_complex_csch, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=tanh(a) 
+      attach_gsl_function :gsl_complex_tanh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=coth(a) 
+      attach_gsl_function :gsl_complex_coth, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arcsinh(a) 
+      attach_gsl_function :gsl_complex_arcsinh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccosh(a) 
+      attach_gsl_function :gsl_complex_arccosh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccosh(a) 
+      attach_gsl_function :gsl_complex_arccosh_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arcsech(a) 
+      attach_gsl_function :gsl_complex_arcsech, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arccsch(a) 
+      attach_gsl_function :gsl_complex_arccsch, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arctanh(a) 
+      attach_gsl_function :gsl_complex_arctanh, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
+      #  r=arctanh(a) 
+      attach_gsl_function :gsl_complex_arctanh_real, [ :double ],
+	GSL_Complex.by_value, [ :double ], GSL_Complex
+      #  r=arccoth(a) 
+      attach_gsl_function :gsl_complex_arccoth, [ GSL_Complex.by_value ],
+	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
     end
   end
 end
