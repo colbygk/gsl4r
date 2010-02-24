@@ -1,0 +1,8 @@
+This directory is empty for now, as all tests are generated automatically by running:
+
+rake test
+
+This will create a C program that makes calls to GSL functions, then writing the
+results as a Ruby program that cross checks the FFI based wrapper answers against
+the C program's results using Test::Unit.
+
