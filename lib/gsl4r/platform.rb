@@ -1,6 +1,7 @@
 #
-# This file is automatically modified at the
-# time of gem installation
+# TODO:
+# Have this file automatically modified at the
+# time of gem installation?
 #
 
 module GSL4r
