@@ -17,14 +17,21 @@ end
 
 # Split prototype into method name, arguments, return type and comment section
 def split_prototype( prototype )
-  prototype,comment = prototype.split(/\//)
-  prototype,args = prototype.split(/\((.*)\)/)
+
+  # Split apart the prototype into its constituents
+  # Someday, may need to do something with a modifier i.e. const
+  modifier,return_type,method_name,args,comment =
+    prototype.split(/([^\W]+)\s+([^\W]+)\s{0,}(\(.+\));\s{0,}(\/\*.*)/)
+
+  argsparsed = args.gsub(/\(|\)/,'').split(/(\w+)(\s{0,})(\w{0,})(,{0,})/)
+
   argtypes = []
-  args.split(",").each { |arg|
-    type_info, varname = arg.split(" ")
-    argtypes << type_info
-  }
-  return_type,method_name = prototype.split(" ")
+  i = 1
+  until argsparsed.length < i
+    argtypes << argsparsed[i]
+    i += 5
+  end
+
   return method_name, argtypes, return_type, "#{comment}".gsub("\*","")
 end
 
@@ -41,7 +48,7 @@ typesubsmap = {
 ARGV.each do |file|
   File.open(file, "r") do |infile|
     while line = infile.gets
-      method_name, args, return_type, comment = split_prototype( line )
+      method_name, args, return_type, comment = split_prototype( line.chomp )
       c_return = return_type.gsub(return_type, implsubsmap[return_type])
       r_return = return_type.gsub(return_type, typesubsmap[return_type])
       c_args = "[ "
