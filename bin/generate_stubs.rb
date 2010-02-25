@@ -23,11 +23,15 @@ def split_prototype( prototype )
   modifier,return_type,method_name,args,comment =
     prototype.split(/([^\W]+)\s+([^\W]+)\s{0,}(\(.+\));\s{0,}(\/\*.*)/)
 
+  # This will have to be modified to handle modifiers to the type
+  # information, pointer * or &reference, or array[]
   argsparsed = args.gsub(/\(|\)/,'').split(/(\w+)(\s{0,})(\w{0,})(,{0,})/)
 
+  # the regex above will place the type information in index(1) of the
+  # array, then 5 positions after that for the next one, and so on...
   argtypes = []
   i = 1
-  until argsparsed.length < i
+  until argsparsed.length <= i
     argtypes << argsparsed[i]
     i += 5
   end

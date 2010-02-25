@@ -6,9 +6,9 @@
 #
 
 
-require 'const_num.rb'
-require 'const_cgs.rb'
-require 'const_cgsm.rb'
-require 'const_mks.rb'
-require 'const_mksa.rb'
+require 'gsl4r/const_num'
+require 'gsl4r/const_cgs'
+require 'gsl4r/const_cgsm'
+require 'gsl4r/const_mks'
+require 'gsl4r/const_mksa'
 
