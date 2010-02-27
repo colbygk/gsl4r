@@ -14,11 +14,18 @@ module GSL4r
 
     $c_var_num = 0
 
-    def attach_gsl_function( method_name, args, return_var, args_type=nil, return_type=nil )
+    def attach_gsl_function( method_name, args, return_var, args_type=nil, return_type=nil,
+			    add_self=true )
 
       # This function is attached to the extended ::FFI::Library
       # module from the calling namespace, e.g. ::GSL4r::Complex::Methods
       attach_function method_name, args, return_var
+
+      # Give a hint to the current module if this method should add a copy
+      # of itself to the calling list to make calls convienent e.g. a.abs
+      self.class.class_eval <<-end_eval
+        ::#{self}::#{method_name.to_s.upcase}_ADD_SELF = #{add_self}
+      end_eval
 
       if ( args_type != nil )
         # prepare c and ruby args code
@@ -120,7 +127,9 @@ module GSL4r
 
 	  self.class.class_eval <<-end_eval
 	  def #{called_method}(*args, &block)
-	    args.insert(0, self)
+	    if ::#{GSL_MODULE.to_s}::Methods::#{prefix.to_s.upcase}#{called_method.to_s.upcase}_ADD_SELF 
+	      args.insert(0, self)
+	    end
 	    ::#{GSL_MODULE.to_s}::Methods::#{prefix}#{called_method}( *args, &block )
 	  end
 	  end_eval

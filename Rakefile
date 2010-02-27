@@ -17,6 +17,11 @@ SUMMARY = "GSL4r, ruby FFI wrappers around GNU Scientific Library"
 DESCRIPTION = "Wrappers around the GNU Scientific Library using Foreign Function Interface.  This allows all ruby implementations that support FFI to interface to the C based GSL routines."
 DIRS = [ "lib/**/*", "test/**/*" ]
 
+gsl_cflags = ""
+gsl_ldflags = ""
+gsl_lib_path = ""
+
+
 spec = Gem::Specification.new do |s|
   s.name = GEM
   s.rubyforge_project = s.name
@@ -93,5 +98,4 @@ task :gsl_config do
 end
 
 task :default => [:gsl_config,:package] do
-
 end

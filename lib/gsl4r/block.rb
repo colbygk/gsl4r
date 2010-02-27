@@ -11,16 +11,34 @@
 require 'rubygems'
 require 'ffi'
 
+require 'gsl4r/util'
+require 'gsl4r/harness'
+
 module GSL4r
   module Block
 
     extend ::FFI::Library
 
-    ffi_lib 'gsl'
-
     class GSL_Block < FFI::Struct
-    layout :size, :size_t,
-           :data, :pointer,
+      layout :size, :size_t,
+	:data, :pointer
+
+      include ::GSL4r::Util::AutoPrefix
+      module ::GSL4r::Util::AutoPrefix
+	GSL_PREFIX = "gsl_block_"
+	GSL_MODULE = ::GSL4r::Block
+      end
+
+    end # class GSL_Block
+
+    module Methods
+      extend ::GSL4r::Util
+      extend ::FFI::Library
+
+      ffi_lib ::GSL4r::GSL_LIB_PATH
+
+      attach_function :gsl_block_alloc, [:size_t], :pointer
+      attach_function :gsl_block_free, [:pointer], :void
     end
-  end
-end
+  end # module Block
+end # module GSL4r

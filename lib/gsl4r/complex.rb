@@ -184,7 +184,7 @@ module GSL4r
 
       extend ::FFI::Library
 
-      ffi_lib GSL4r::GSL_LIB_PATH
+      ffi_lib ::GSL4r::GSL_LIB_PATH
 
       # Returns the argument of the complex number z, arg(z), where -pi < arg(z) <= pi
       attach_gsl_function :gsl_complex_arg, [ GSL_Complex.by_value ], :double,
@@ -279,12 +279,12 @@ module GSL4r
       # This function returns the complex square root of the real number x,
       # where x may be negative.
       attach_gsl_function :gsl_complex_sqrt_real, [ :double ],
-	GSL_Complex.by_value, :double, GSL_Complex
+	GSL_Complex.by_value, :double, GSL_Complex, false
 
 
       #  r= r e^(i theta) 
       attach_gsl_function :gsl_complex_polar, [ :double, :double ],
-	GSL_Complex.by_value, [ :double, :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double, :double ], GSL_Complex, false
       #  r=a^b 
       attach_gsl_function :gsl_complex_pow, [ GSL_Complex.by_value, GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex, GSL_Complex ], GSL_Complex
@@ -326,25 +326,25 @@ module GSL4r
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arcsin(a) 
       attach_gsl_function :gsl_complex_arcsin_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arccos(a) 
       attach_gsl_function :gsl_complex_arccos, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arccos(a) 
       attach_gsl_function :gsl_complex_arccos_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arcsec(a) 
       attach_gsl_function :gsl_complex_arcsec, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arcsec(a) 
       attach_gsl_function :gsl_complex_arcsec_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arccsc(a) 
       attach_gsl_function :gsl_complex_arccsc, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arccsc(a) 
       attach_gsl_function :gsl_complex_arccsc_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arctan(a) 
       attach_gsl_function :gsl_complex_arctan, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
@@ -377,7 +377,7 @@ module GSL4r
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arccosh(a) 
       attach_gsl_function :gsl_complex_arccosh_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arcsech(a) 
       attach_gsl_function :gsl_complex_arcsech, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
@@ -389,7 +389,7 @@ module GSL4r
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
       #  r=arctanh(a) 
       attach_gsl_function :gsl_complex_arctanh_real, [ :double ],
-	GSL_Complex.by_value, [ :double ], GSL_Complex
+	GSL_Complex.by_value, [ :double ], GSL_Complex, false
       #  r=arccoth(a) 
       attach_gsl_function :gsl_complex_arccoth, [ GSL_Complex.by_value ],
 	GSL_Complex.by_value, [ GSL_Complex ], GSL_Complex
