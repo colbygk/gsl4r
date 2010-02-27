@@ -23,6 +23,21 @@ module GSL4r
       layout :size, :size_t,
 	:data, :pointer
 
+	def get_size( a_block )
+	  return a_block.get_ulong(0)
+	end
+
+	def get_data( a_block )
+	  return a_block.get_array_of_double(1,get_size(a_block))
+	end
+
+	def set_data( a_block, some_data )
+	  if ( some_data.length >= get_size(a_block) )
+	    raise "data exceeds size of block"
+	  end
+	  a_block.put_array_of_double(1,some_data)
+	end
+
       include ::GSL4r::Util::AutoPrefix
       module ::GSL4r::Util::AutoPrefix
 	GSL_PREFIX = "gsl_block_"
