@@ -80,6 +80,7 @@ module GSL4r
 
 	c_src << "  puts(" << %Q{\\"end\\"} << ");"
 
+	# TODO, create unit test for aliased/shorthand versions of methods
 
 	eval <<-end_eval
         def c_test_#{method_name}
