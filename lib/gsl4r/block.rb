@@ -37,8 +37,9 @@ module GSL4r
 
       ffi_lib ::GSL4r::GSL_LIB_PATH
 
-      attach_function :gsl_block_alloc, [:size_t], :pointer
-      attach_function :gsl_block_free, [:pointer], :void
+      attach_gsl_function :gsl_block_alloc, [:size_t], :pointer, [:size_t], :pointer, false
+      attach_gsl_function :gsl_block_calloc, [:size_t], :pointer, [:size_t], :pointer, false
+      attach_gsl_function :gsl_block_free, [:pointer], :void, [:pointer], :void, false
     end
   end # module Block
 end # module GSL4r
