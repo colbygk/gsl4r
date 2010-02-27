@@ -6,13 +6,13 @@
 #
 
 require 'rubygems'
-require 'monitor'
 require 'ffi'
 
 require 'gsl4r/util'
 require 'gsl4r/harness'
 
 module GSL4r
+
   module Complex
     extend ::FFI::Library
     # Note, according to 
@@ -33,10 +33,15 @@ module GSL4r
     # back to double.  It would be nice if we could guarantee that it
     # was a 128 quadruple precision value, but... no.
 
-    class GSL_Complex < ::FFI::Struct
+    class GSL_Complex < ::FFI::Struct 
       layout :dat, [:double, 2]
 
-      $globalGSLComplexLock = Monitor.new
+      include ::GSL4r::Util::AutoPrefix
+
+      module ::GSL4r::Util::AutoPrefix
+	GSL_PREFIX = "gsl_complex_"
+	GSL_MODULE = ::GSL4r::Complex
+      end
 
       EPSILON = 5.0e-15
       R = 0
@@ -56,6 +61,7 @@ module GSL4r
       # issues when copies are created, probably in by_value specifically
       # TODO: followup with Wayne Meissner to confirm this
       class << self
+
 	#
 	def create( r=0.0, i=0.0 )
 	  myComplex = GSL_Complex.new
@@ -145,48 +151,6 @@ module GSL4r
 	return "(#{self[:dat][R]},#{self[:dat][I]})"
       end
 
-
-      # This traps method calls intended to create shortened versions
-      # of the GSL function calls.
-      # 
-      # This first checks if the called method matches the Module
-      # function call gsl_complex_#{called_method} (where called_method
-      # might be 'abs').
-      #
-      # If it finds a match (respond_to), it will then create a new
-      # method for the class as a whole (class_eval), making the method
-      # available to not just this instance of the class, but all
-      # existing instances and all those created after.
-      # 
-      # Finally, the creation is wrapped up in a synchronized call
-      # to ensure thread safety.  It is only unsafe the first time
-      # the method is invoked (and non-existent at that point).  Every
-      # time the method is invoked after, it should not hit method_missing.
-      # TODO: Is this true for java threads too, or is it per 'vm' per
-      # thread?
-      def method_missing( called_method, *args, &block )
-
-	$globalGSLComplexLock.synchronize do
-
-	  prefix = "gsl_complex_"
-
-	  if ( ::GSL4r::Complex::Methods.respond_to?("#{prefix}#{called_method}") == false )
-	    prefix = ""
-	    if ( ::GSL4r::Complex::Methods.respond_to?("#{called_method}") == false )
-	      super # NoMethodError
-	    end
-	  end
-
-	  self.class.class_eval <<-end_eval
-	  def #{called_method}(*args, &block)
-	    args.insert(0, self)
-	    ::GSL4r::Complex::Methods::#{prefix}#{called_method}( *args, &block )
-	  end
-	  end_eval
-
-	  __send__(called_method, *args, &block)
-	end # globalGSLComplexLock.synchronize
-      end # method_missing
     end # GSL_Complex
 
 

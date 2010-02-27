@@ -7,6 +7,7 @@
 #
 
 require 'rubygems'
+require 'monitor'
 
 module GSL4r
   module Util
@@ -80,6 +81,54 @@ module GSL4r
         end
 	end_eval
       end
-    end
-  end
-end
+    end # attach_gsl_function
+
+    module AutoPrefix 
+
+      $prefixLock = Monitor.new
+
+      # This traps method calls intended to create shortened versions
+      # of the GSL function calls.
+      # 
+      # This first checks if the called method matches the Module
+      # function call gsl_complex_#{called_method} (where called_method
+      # might be 'abs').
+      #
+      # If it finds a match (respond_to), it will then create a new
+      # method for the class as a whole (class_eval), making the method
+      # available to not just this instance of the class, but all
+      # existing instances and all those created after.
+      # 
+      # Finally, the creation is wrapped up in a synchronized call
+      # to ensure thread safety.  It is only unsafe the first time
+      # the method is invoked (and non-existent at that point).  Every
+      # time the method is invoked after, it should not hit method_missing.
+      # TODO: Is this true for java threads too, or is it per 'vm' per
+      # thread?
+      def method_missing( called_method, *args, &block )
+
+	$prefixLock.synchronize do
+
+	  prefix = GSL_PREFIX
+
+	  if ( GSL_MODULE::Methods.respond_to?("#{prefix}#{called_method}") == false )
+	    prefix = ""
+	    if ( GSL_MODULE::Methods.respond_to?("#{called_method}") == false )
+	      super # NoMethodError
+	    end
+	  end
+
+	  self.class.class_eval <<-end_eval
+	  def #{called_method}(*args, &block)
+	    args.insert(0, self)
+	    ::#{GSL_MODULE.to_s}::Methods::#{prefix}#{called_method}( *args, &block )
+	  end
+	  end_eval
+
+	  __send__(called_method, *args, &block)
+	end # prefixLock.synchronize
+      end # method_missing
+    end # AutoPrefix
+
+  end # Util
+end # GSL4r
