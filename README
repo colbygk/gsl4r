@@ -26,11 +26,9 @@ gem install -r gsl4r
 == Examples
 
 cd gsl4r/lib
-irb -r gsl4r
-irb(main):001:0> require 'gsl4r/complex'
-=> true
-irb(main):002:0> include GSL4r
-=> Object
+irb -r rubygems -r gsl4r -r gsl4r/complex
+irb(main):001:0> include GSL4r::Complex
+	  => Object
 irb(main):004:0> a=GSL_Complex.create(1,1)
 => (1.0,1.0)
 irb(main):005:0> b=GSL_Complex.create(2,2)
@@ -46,6 +44,17 @@ irb(main):016:0> include GSL4r::Complex::Methods
 => Object
 irb(main):015:0> gsl_complex_add(a,b)
 => (3.0,3.0)
+...
+irb(main):010:0> require 'gsl4r/const'
+=> true
+irb(main):011:0> include GSL4r::PhysicalConstants
+=> Object
+irb(main):013:0> p CGS::JOULE
+10000000.0
+irb(main):014:0> p MKS::ERG
+1.0e-07
+
+...
 
 == Questions and/or Comments
 
