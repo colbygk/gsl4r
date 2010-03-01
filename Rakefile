@@ -28,7 +28,7 @@ spec = Gem::Specification.new do |s|
   s.version = GEM_VERSION
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
+  s.extra_rdoc_files = ["README", "LICENSE", 'TODO', 'changelog']
   s.summary = SUMMARY
   s.description = DESCRIPTION
   s.author = AUTHOR
@@ -37,7 +37,7 @@ spec = Gem::Specification.new do |s|
 
   s.requirements << 'GNU Scientific Library, version 1.13 or greater'
   s.require_path = 'lib'
-  s.files = %w{LICENSE LICENSE.LGPLv3 README INSTALL Rakefile TODO}
+  s.files = %w{LICENSE LICENSE.LGPLv3 README INSTALL Rakefile TODO changelog}
   s.files = s.files + DIRS.collect do |dir|
     Dir.glob( dir )
   end.flatten.delete_if { |f| f.include?(".git") }
