@@ -1,5 +1,7 @@
 == Description
 
+ALPHA - ALPHA - ALPHA
+
 GSL4r
 Ruby GNU Scientific Library via FFI
 
@@ -9,7 +11,7 @@ This avoids the complications with implementation specific C extensions or Java 
 
 == Documentation
 
-This project is currently in its alpha stages and as of 11 Feb 2010, I have only pushed a library for using Complex functions in GSL.
+This project is currently in its alpha stages and as of 01 Mar 2010, I have only pushed a library for using Complex functions in GSL, all constants are defined, and some functions for handling blocks and vectors containing blocks.
 
 == Getting Started
 
@@ -19,7 +21,7 @@ git clone git://rubyforge.org/gsl4r.git
 
 == Installing gsl4r
 
-There is no installation available at this time.
+gem install -r gsl4r
 
 == Examples
 
