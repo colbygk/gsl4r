@@ -36,12 +36,10 @@ module GSL4r
     class GSL_Complex < ::FFI::Struct 
       layout :dat, [:double, 2]
 
-      include ::GSL4r::Util::AutoPrefix
+      GSL_PREFIX = "gsl_complex_"
+      GSL_MODULE = ::GSL4r::Complex
 
-      module ::GSL4r::Util::AutoPrefix
-	GSL_PREFIX = "gsl_complex_"
-	GSL_MODULE = ::GSL4r::Complex
-      end
+      include ::GSL4r::Util::AutoPrefix
 
       EPSILON = 5.0e-15
       R = 0

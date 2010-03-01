@@ -117,21 +117,28 @@ module GSL4r
 
 	$prefixLock.synchronize do
 
-	  prefix = GSL_PREFIX
+	  prefix = self.class::GSL_PREFIX
 
-	  if ( GSL_MODULE::Methods.respond_to?("#{prefix}#{called_method}") == false )
+	  if ( self.class::GSL_MODULE::Methods.respond_to?("#{prefix}#{called_method}") == false )
 	    prefix = ""
-	    if ( GSL_MODULE::Methods.respond_to?("#{called_method}") == false )
+	    if ( self.class::GSL_MODULE::Methods.respond_to?("#{called_method}") == false )
 	      super # NoMethodError
 	    end
 	  end
 
+	  # TODO: this could be smoothed out with the #args/#parameters parts of
+	  # Ruby 1.9.
+	  # This could inspect the definition of the parameter and if the
+	  # first argument in the definition were of the same type as self
+	  # then self could be inserted into the args list per below
+	  # rather than requiring the #{called_method.to_s.upcase}_ADD_SELF
+	  # boolean definition and check
 	  self.class.class_eval <<-end_eval
 	  def #{called_method}(*args, &block)
-	    if ::#{GSL_MODULE.to_s}::Methods::#{prefix.to_s.upcase}#{called_method.to_s.upcase}_ADD_SELF 
+	    if ::#{self.class::GSL_MODULE.to_s}::Methods::#{prefix.to_s.upcase}#{called_method.to_s.upcase}_ADD_SELF 
 	      args.insert(0, self)
 	    end
-	    ::#{GSL_MODULE.to_s}::Methods::#{prefix}#{called_method}( *args, &block )
+	    ::#{self.class::GSL_MODULE.to_s}::Methods::#{prefix}#{called_method}( *args, &block )
 	  end
 	  end_eval
 

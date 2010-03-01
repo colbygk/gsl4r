@@ -39,10 +39,9 @@ module GSL4r
 	end
 
       include ::GSL4r::Util::AutoPrefix
-      module ::GSL4r::Util::AutoPrefix
-	GSL_PREFIX = "gsl_block_"
-	GSL_MODULE = ::GSL4r::Block
-      end
+
+      GSL_PREFIX = "gsl_block_"
+      GSL_MODULE = ::GSL4r::Block
 
     end # class GSL_Block
 
