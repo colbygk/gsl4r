@@ -1,5 +1,6 @@
 0.0.2
 
+* Uses gsl-config at runtime
 * Added all GSL constants
 * Block and Vector memory handling
 * Moved method_missing definition into generic AutoPrefix
