@@ -6,6 +6,7 @@
 * Moved method_missing definition into generic AutoPrefix
 *  class, so that this code is not duplicated amongst many
 *  classes.
+* Added tools in bin/ for generating wrapper stubs and constants
 
 0.0.1
 
