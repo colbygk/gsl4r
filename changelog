@@ -1,0 +1,17 @@
+0.0.2
+
+* Added all GSL constants
+* Block and Vector memory handling
+* Moved method_missing definition into generic AutoPrefix
+*  class, so that this code is not duplicated amongst many
+*  classes.
+
+0.0.1
+
+* Started, huzzah!
+* GSL_Complex functions added, along with convience
+*  framework for functions callable on GSL_Complex objects
+*  i.e. a.abs instead of a.gsl_complex_abs(a), etc..
+* Tests to check that the FFI wrappered routines produce
+*  the same results as natively called C versions.
+* Initial framework behind Rakefile
