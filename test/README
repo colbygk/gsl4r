@@ -2,7 +2,7 @@ This directory is empty for now, as all tests are generated automatically by run
 
 rake test
 
-This will create a C program that makes calls to GSL functions, then writing the
-results as a Ruby program that cross checks the FFI based wrapper answers against
-the C program's results using Test::Unit.
+This will create a C programs that make calls to GSL functions, then writing the
+results as Ruby programs that cross check the FFI based wrapper answers against
+the C programs' results using Test::Unit.
 
