@@ -104,6 +104,22 @@ module GSL4r
 	end
       end
 
+      def +(other)
+	self.add(other)
+      end
+
+      def -(other)
+	self.sub(other)
+      end
+
+      def *(other)
+	self.mul(other)
+      end
+
+      def /(other)
+	self.div(other)
+      end
+
       # Play nice and have these methods show up in case someone
       # is digging around for them using these reflection routines
       # Note: this won't show the shortened named forms that
