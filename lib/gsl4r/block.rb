@@ -19,29 +19,60 @@ module GSL4r
 
     extend ::FFI::Library
 
-    class GSL_Block < FFI::Struct
-      layout :size, :size_t,
-	:data, :pointer
+    # lifted from
+    # http://wiki.github.com/ffi/ffi/examples
+    module BlockLayout
+      def self.included(base)
+	base.class_eval do
+	  layout :size, :size_t,
+	    :data, :pointer
+	end
+      end
+    end
 
-	def get_size( a_block )
-	  return a_block.get_ulong(0)
+    def get_block_size( a_block )
+      return a_block.get_ulong(0)
+    end
+    module_function :get_block_size
+
+    def get_block_data( a_block )
+      return a_block.get_array_of_double(0,get_block_size(a_block))
+    end
+    module_function :get_block_data
+
+    def set_block_data( a_block, some_data )
+      if ( some_data.length > get_block_size(a_block) )
+	raise "data exceeds size of block"
+      end
+      a_block.put_array_of_double(1,some_data)
+      return some_data
+    end
+    module_function :set_block_data
+
+    class GSL_Block < FFI::ManagedStruct
+      include ::GSL4r::Block::BlockLayout
+
+      def self.release(ptr)
+	puts "release"
+	::GSL4r::Block::Methods::gsl_block_free(ptr)
+      end
+
+    end
+
+    class GSL_Block_Cast < FFI::Struct
+      include ::GSL4r::Block::BlockLayout
+
+	def length
+	  return self[:size]
 	end
 
-	def get_data( a_block )
-	  return a_block.get_array_of_double(1,get_size(a_block))
+	def values
+	  return self[:data].get_array_of_double(0,length)
 	end
 
-	def set_data( a_block, some_data )
-	  if ( some_data.length >= get_size(a_block) )
-	    raise "data exceeds size of block"
-	  end
-	  a_block.put_array_of_double(1,some_data)
+	def set( a )
+	  self[:data].put_array_of_double(0,a)
 	end
-
-      include ::GSL4r::Util::AutoPrefix
-
-      GSL_PREFIX = "gsl_block_"
-      GSL_MODULE = ::GSL4r::Block
 
     end # class GSL_Block
 
@@ -51,9 +82,10 @@ module GSL4r
 
       ffi_lib ::GSL4r::GSL_LIB_PATH
 
-      attach_gsl_function :gsl_block_alloc, [:size_t], :pointer, [:size_t], :pointer, false
-      attach_gsl_function :gsl_block_calloc, [:size_t], :pointer, [:size_t], :pointer, false
-      attach_gsl_function :gsl_block_free, [:pointer], :void, [:pointer], :void, false
+      attach_function :gsl_block_alloc, [:size_t], :pointer
+      attach_function :gsl_block_calloc, [:size_t], :pointer
+      attach_function :gsl_block_free, [:pointer], :void
+
     end
   end # module Block
 end # module GSL4r
