@@ -53,8 +53,19 @@ module GSL4r
       include ::GSL4r::Block::BlockLayout
 
       def self.release(ptr)
-	puts "release"
 	::GSL4r::Block::Methods::gsl_block_free(ptr)
+      end
+
+      def length
+	return self[:size]
+      end
+
+      def values
+	return self[:data].get_array_of_double(0,length)
+      end
+
+      def set( a )
+	self[:data].put_array_of_double(0,a)
       end
 
     end
@@ -62,17 +73,17 @@ module GSL4r
     class GSL_Block_Cast < FFI::Struct
       include ::GSL4r::Block::BlockLayout
 
-	def length
-	  return self[:size]
-	end
+      def length
+	return self[:size]
+      end
 
-	def values
-	  return self[:data].get_array_of_double(0,length)
-	end
+      def values
+	return self[:data].get_array_of_double(0,length)
+      end
 
-	def set( a )
-	  self[:data].put_array_of_double(0,a)
-	end
+      def set( a )
+	self[:data].put_array_of_double(0,a)
+      end
 
     end # class GSL_Block
 

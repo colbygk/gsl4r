@@ -1,8 +1,11 @@
-This directory is empty for now, as all tests are generated automatically by running:
+Most tests are generated automatically by running at the top of the source tree:
 
 rake test
 
-This will create a C programs that make calls to GSL functions, then writing the
+This will create C programs that make calls to GSL functions, then writing the
 results as Ruby programs that cross check the FFI based wrapper answers against
 the C programs' results using Test::Unit.
 
+Other tests include:
+
+block_test.rb - Test basic operations dealing with gsl_block types
