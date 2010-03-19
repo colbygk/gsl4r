@@ -48,6 +48,44 @@ class BlockTests < Test::Unit::TestCase
     end
   end
 
+  class ::GSL4r::Block::GSL_Block_Monitor < ::GSL4r::Block::GSL_Block
+    def self.release(ptr)
+      super
+      $release_count = $release_count + 1
+    end
+  end
+
+  class ::GSL4r::Block::GSL_Block_Cast_Monitor < ::GSL4r::Block::GSL_Block_Cast
+    def self.release(ptr)
+      super
+      $release_count = $release_count + 1
+    end
+  end
+
+  # tests using a cast object to retain a reference
+  # to a memory pointer, without freeing it when the
+  # object is garbage collected.
+  def test_gsl_block_cast()
+    $release_count = 0
+
+    assert_nothing_raised do
+      blkptr = MemoryPointer.new :pointer
+      blkptr = GSL4r::Block::Methods::gsl_block_alloc( SIZE )
+
+      b1=GSL4r::Block::GSL_Block_Monitor.new( blkptr )
+      b2=GSL4r::Block::GSL_Block_Cast_Monitor.new( blkptr )
+
+      assert b1.length == b2.length
+    end
+
+    b1=nil
+    b2=nil
+    GC.start
+
+    assert $release_count == 1
+
+  end
+
   def test_gsl_block_set_values()
     assert_nothing_raised do
       blkptr = MemoryPointer.new :pointer

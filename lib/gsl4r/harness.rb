@@ -44,8 +44,8 @@ module GSL4r
     end
 
     def compile_c_tests
-      compile_s = "#{@c_compiler} #{@c_flags.join(" ")} " +
-	"-o #{TEST_DIR}/#{@c_binary} #{TEST_DIR}/#{@c_src_name}"
+      compile_s = "#{@c_compiler} -o #{TEST_DIR}/#{@c_binary} " +
+       "#{TEST_DIR}/#{@c_src_name} #{@c_flags.join(" ")} "
       p compile_s
       `#{compile_s}`
     end
