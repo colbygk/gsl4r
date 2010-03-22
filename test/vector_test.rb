@@ -40,10 +40,8 @@ class VectorTests < Test::Unit::TestCase
 
   def test_gsl_vector_new()
     assert_nothing_raised do
-      vecptr = MemoryPointer.new :pointer
-      vecptr = GSL4r::Vector::Methods::gsl_vector_alloc( SIZE )
+      vec = GSL_Vector.create( SIZE )
 
-      vec = GSL_Vector.new( vecptr )
       assert vec.length == SIZE
     end
   end
@@ -88,14 +86,42 @@ class VectorTests < Test::Unit::TestCase
 
   def test_gsl_vector_set_values()
     assert_nothing_raised do
-      vecptr = MemoryPointer.new :pointer
-      vecptr = GSL4r::Vector::Methods::gsl_vector_alloc( SIZE )
-      vec = GSL_Vector.new( vecptr )
+      vec = GSL_Vector.create( SIZE )
 
-      vec.set( (1..SIZE).to_a.collect { |i| i=i*i } )
+      vec.set_with_array( (0..SIZE-1).to_a.collect { |i| i=i*i } )
       v = vec.values
-      (1..SIZE).each { |i| assert v[i-1] == i*i }
+      (0..SIZE-1).each { |i| assert v[i] == i*i }
 
+    end
+  end
+
+  def test_gsl_vector_set_all()
+    assert_nothing_raised do
+      vec = GSL_Vector.create( SIZE )
+
+      vec.set_all( 5 )
+      v = vec.values
+      s = 0.0
+      (0..SIZE-1).each { |i| s = s + v[i] }
+
+      assert (SIZE*5) == s
+    end
+  end
+
+  def test_gsl_vector_subvector()
+    assert_nothing_raised do
+      vec = GSL_Vector.create( SIZE )
+
+      a = Array.new( SIZE )
+      vec.set_with_array( (0..SIZE-1).to_a.collect { |i| i=i+1.0 } )
+
+      subvec = vec.subvector( 10, 5 )
+
+      v = subvec.values
+
+      test_a = (0..4).to_a.collect { |i| i=i+11.0 }
+
+      assert v == test_a
     end
   end
 
