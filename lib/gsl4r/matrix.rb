@@ -280,6 +280,15 @@ module GSL4r
       attach_function :gsl_matrix_calloc, [:size_t,:size_t], :pointer
       attach_function :gsl_matrix_free, [:pointer], :void
 
+      # Accessors
+      attach_function :gsl_matrix_get, [:pointer, :size_t, :size_t], :double
+      attach_function :gsl_matrix_set, [:pointer, :size_t, :size_t], :double
+
+      # Initializers
+      attach_gsl_function :gsl_matrix_set_all, [:pointer, :double], :void
+      attach_gsl_function :gsl_matrix_set_zero, [:pointer], :void
+      attach_gsl_function :gsl_matrix_set_identity, [:pointer], :void
+      
     end
 
     class Harness

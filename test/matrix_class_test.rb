@@ -35,9 +35,9 @@ class MatrixTests < Test::Unit::TestCase
       assert m.length == SIZE
 
       m.each { |i|
-       i.each { |j|
- 	 assert j == 0
-       }
+	i.each { |j|
+	  assert j == 0
+	}
       }
 
     end
@@ -87,6 +87,40 @@ class MatrixTests < Test::Unit::TestCase
 
     assert $release_count == 1
 
+  end
+
+  def test_gsl_matrix_set_values()
+    assert_nothing_raised do
+      matrix = GSL_Matrix.create( SIZE,SIZE )
+
+      arys = Array.new(SIZE)
+      (0..SIZE-1).each { |i|
+	arys[i] = (0..SIZE-1).to_a.collect { |j| i*j
+	}
+      }
+
+      matrix.set_with_arrays( arys ) 
+      m = matrix.values
+      (0..SIZE-1).each { |i| (0..SIZE-1).each { |j| assert m[i][j] == i*j } }
+
+    end
+  end
+
+  def test_gsl_matrix_set_all()
+    assert_nothing_raised do
+      matrix = GSL_Matrix.create( SIZE, SIZE )
+
+      matrix.set_all( 5 )
+      m = matrix.values
+      s = 0.0
+      m.each { |i|
+	i.each { |j|
+	  s = s + j
+	}
+      }
+
+      assert (SIZE*SIZE*5) == s
+    end
   end
 
 end
