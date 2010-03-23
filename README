@@ -27,7 +27,6 @@ gem install -r gsl4r
 
 Also see the examples directory in the gem.
 
-cd gsl4r/lib
 irb -r rubygems -r gsl4r -r gsl4r/complex
 irb(main):001:0> include GSL4r::Complex
 => Object
