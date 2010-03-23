@@ -24,7 +24,7 @@ module GSL4r
       def self.included(base)
 	base.class_eval do
 	  layout :size1, :size_t,
-	    :size2,	:size_t
+	    :size2,	:size_t,
 	    :tda,	:size_t,
 	    :data,	:pointer,
 	    :block,	:pointer,
@@ -76,16 +76,27 @@ module GSL4r
       # TODO: needs work
       def values
 	r,c,t = length
-	rows = Array.new(t)
-	cols = Array.new(c)
-	tda = Array.new(t)
 
-	return self[:data].get_array_of_double(0, t*)
+	alldata = self[:data].get_array_of_double(0, (t*c))
+
+	allvalues = []
+	
+	(0..r-1).each { |i|
+	  allvalues << alldata[(c*i),c]
+	}
+
+	return allvalues
       end
 
       # TODO: needs work
-      def set_with_array( a )
-	self[:data].put_array_of_double(0,a)
+      def set_with_arrays( a )
+	store = []
+	a.each { |i|
+	  i.each { |j|
+	    store << j
+	  }
+	}
+	self[:data].put_array_of_double(0,store)
       end
 
 =begin
@@ -179,6 +190,25 @@ module GSL4r
       GSL_MODULE = ::GSL4r::Matrix
 
       include ::GSL4r::Util::AutoPrefix
+
+      def length
+	return self[:size1], self[:size2], self[:tda]
+      end
+
+      # TODO: needs work
+      def values
+	r,c,t = length
+
+	alldata = self[:data].get_array_of_double(0, (t*c))
+
+	allvalues = []
+	
+	(0..r-1).each { |i|
+	  allvalues << alldata[(c*i),c]
+	}
+
+	return allvalues
+      end
 
 =begin
       def length
