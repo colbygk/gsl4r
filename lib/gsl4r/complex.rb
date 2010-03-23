@@ -72,6 +72,10 @@ module GSL4r
 	  "GSL_Complex"
 	end
 
+	def r_initializer()
+	  r_type + ".create"
+	end
+
 	def r_equals(v1,v2)
 	  "#{v1.to_s}.equals(#{v2.to_s})"
 	end

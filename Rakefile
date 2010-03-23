@@ -63,11 +63,17 @@ task :test => [:gsl_config] do
 
   require 'gsl4r'
   require 'gsl4r/complex'
+  require 'gsl4r/vector'
 
   complextests = GSL4r::Complex::Harness.new
   complextests.write_c_tests
   complextests.compile_c_tests
   complextests.run_c_tests "complex_test.rb"
+
+  vectortests = GSL4r::Vector::Harness.new
+  vectortests.write_c_tests
+  vectortests.compile_c_tests
+  vectortests.run_c_tests "vector_test.rb"
 
   runner = Test::Unit::AutoRunner.new(true)
   runner.to_run << 'test'
