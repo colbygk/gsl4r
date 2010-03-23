@@ -8,4 +8,5 @@ the C programs' results using Test::Unit.
 
 Other tests include:
 
-block_test.rb - Test basic operations dealing with gsl_block types
+block_class_test.rb - Test basic operations dealing with gsl_block types
+vector_class_test.rb - Test basic operations dealing with gsl_vector types
