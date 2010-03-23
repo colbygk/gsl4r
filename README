@@ -11,7 +11,7 @@ This avoids the complications with implementation specific C extensions or Java 
 
 == Documentation
 
-This project is currently in its alpha stages and as of 01 Mar 2010, I have only pushed a library for using Complex functions in GSL, all constants are defined, and some functions for handling blocks and vectors containing blocks.
+This project is currently in its alpha stages and as of 22 Mar 2010, I have only pushed a library for using Complex functions in GSL, all constants are defined, and handling pointers to blocks and vectors and basic vector functions.
 
 == Getting Started
 
@@ -25,10 +25,12 @@ gem install -r gsl4r
 
 == Examples
 
+Also see the examples directory in the gem.
+
 cd gsl4r/lib
 irb -r rubygems -r gsl4r -r gsl4r/complex
 irb(main):001:0> include GSL4r::Complex
-	  => Object
+=> Object
 irb(main):004:0> a=GSL_Complex.create(1,1)
 => (1.0,1.0)
 irb(main):005:0> b=GSL_Complex.create(2,2)
@@ -53,7 +55,22 @@ irb(main):013:0> p CGS::JOULE
 10000000.0
 irb(main):014:0> p MKS::ERG
 1.0e-07
-
+...
+irb -r rubygems -r gsl4r -r gsl4r/vector
+irb(main):001:0> include GSL4r::Vector
+=> Object
+irb(main):002:0> a=GSL_Vector.create(3)
+=> #<GSL4r::Vector::GSL_Vector:0x5ea038>
+irb(main):003:0> b=GSL_Vector.create(3)
+=> #<GSL4r::Vector::GSL_Vector:0x5e66f4>
+irb(main):004:0> a.set_with_array([1,2,3])
+=> #<FFI::Pointer address=0x2db2e0>
+irb(main):005:0> b.set_with_array([4,5,6])
+=> #<FFI::Pointer address=0x4f8260>
+irb(main):006:0> a.mul(b)
+=> 0
+irb(main):012:0> a.values
+=> [4.0, 10.0, 18.0]
 ...
 
 == Questions and/or Comments
