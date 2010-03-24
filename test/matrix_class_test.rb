@@ -123,4 +123,41 @@ class MatrixTests < Test::Unit::TestCase
     end
   end
 
+  # picks 4 columns from the last 2 rows starting at 1,1
+  def test_gsl_matrix_submatrix()
+    assert_nothing_raised do
+      m1 = GSL_Matrix.create( SIZE, SIZE )
+      m1.set_with_arrays( [[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]] )
+      m2 = m1.submatrix( 1,1, 2,4 )
+      assert m2.values == [[2.0, 3.0, 4.0, 5.0], [2.0, 3.0, 4.0, 5.0]]
+    end
+  end
+
+  # TODO: build array and prepopulate
+  def test_gsl_matrix_view_array()
+    assert_nothing_raised do
+      d = ::FFI::MemoryPointer.new :double
+
+    end
+  end
+
+  def test_gsl_matrix_view_vector()
+    assert_nothing_raised do
+      v = ::GSL4r::Vector::GSL_Vector.create(10)
+      v.set_with_array( [1,2,3,4,5,6,7,8,9,10] )
+
+      m1 = ::GSL4r::Matrix::Methods::gsl_matrix_view_vector( v, 2, 2 )
+
+      assert m1.length == [2,2,2]
+      assert m1.values == [[1,2],[3,4]]
+
+      m1 = ::GSL4r::Matrix::Methods::gsl_matrix_view_vector_with_tda( v, 2, 2, 5 )
+
+      assert m1.length == [2,2,5]
+      assert m1.values == [[1,2],[6,7]]
+    end
+  end
+
+
+
 end

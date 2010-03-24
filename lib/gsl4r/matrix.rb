@@ -12,6 +12,7 @@ require 'ffi'
 require 'gsl4r/util'
 require 'gsl4r/harness'
 require 'gsl4r/block'
+require 'gsl4r/vector'
 
 module GSL4r
   module Matrix
@@ -90,11 +91,19 @@ module GSL4r
 
       # TODO: needs work
       def set_with_arrays( a )
-	store = []
+	cc = 0
+	rl,cl,tl = length
+
+	store = Array.new
 	a.each { |i|
 	  i.each { |j|
 	    store << j
+	    cc += 1
 	  }
+	  if ( cc < cl-1 ) # pad out any missing values
+	    (cc..cl-1).each { store << 0.0 }
+	  end
+	  cc = 0
 	}
 	self[:data].put_array_of_double(0,store)
       end
@@ -204,7 +213,7 @@ module GSL4r
 	allvalues = []
 	
 	(0..r-1).each { |i|
-	  allvalues << alldata[(c*i),c]
+	  allvalues << alldata[(t*i),c]
 	}
 
 	return allvalues
@@ -289,6 +298,33 @@ module GSL4r
       attach_gsl_function :gsl_matrix_set_zero, [:pointer], :void
       attach_gsl_function :gsl_matrix_set_identity, [:pointer], :void
       
+      # Matrix views
+      attach_gsl_function :gsl_matrix_submatrix,
+	[:pointer, :size_t, :size_t, :size_t, :size_t],
+	GSL_Matrix_Cast.by_value
+
+      attach_function :gsl_matrix_view_array, [:pointer, :size_t, :size_t],
+	GSL_Matrix_Cast.by_value
+
+      attach_function :gsl_matrix_view_array_with_tda,
+	[:pointer, :size_t, :size_t, :size_t],
+	GSL_Matrix_Cast.by_value
+
+      attach_function :gsl_matrix_view_vector, [:pointer, :size_t, :size_t],
+	GSL_Matrix_Cast.by_value
+
+      attach_function :gsl_matrix_view_vector_with_tda,
+	[:pointer, :size_t, :size_t, :size_t],
+	GSL_Matrix_Cast.by_value
+
+      attach_gsl_function :gsl_matrix_row,
+	[:pointer, :size_t],
+	::GSL4r::Vector::GSL_Vector_Cast.by_value
+
+      attach_gsl_function :gsl_matrix_column,
+	[:pointer, :size_t],
+	::GSL4r::Vector::GSL_Vector_Cast.by_value
+
     end
 
     class Harness
