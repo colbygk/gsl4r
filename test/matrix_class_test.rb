@@ -127,9 +127,9 @@ class MatrixTests < Test::Unit::TestCase
   def test_gsl_matrix_submatrix()
     assert_nothing_raised do
       m1 = GSL_Matrix.create( SIZE, SIZE )
-      m1.set_with_arrays( [[1,2,3,4,5,6,7],[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]] )
+      m1.set_with_arrays( [[1,2,3,4,5,6,7],[9,8,7,6,5,4,3],[1,2,3,4,5,6,7]] )
       m2 = m1.submatrix( 1,1, 2,4 )
-      assert m2.values == [[2.0, 3.0, 4.0, 5.0], [2.0, 3.0, 4.0, 5.0]]
+      assert m2.values == [[8.0, 7.0, 6.0, 5.0], [2.0, 3.0, 4.0, 5.0]]
     end
   end
 
@@ -158,6 +158,68 @@ class MatrixTests < Test::Unit::TestCase
     end
   end
 
+  def test_gsl_matrix_row()
+    assert_nothing_raised do
+      m = GSL_Matrix.create( 3, 5 )
+      m.set_with_arrays( [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] )
+
+      v = m.row(1)
+
+      assert v.values == [6,7,8,9,10]
+    end
+  end
+
+  # TODO: check that this is really how gsl_matrix_column
+  # is supposed to work...  I mean, really?  Returning a row
+  # sized vector that starts at r*t+c, but contiguous
+  # from the row???
+  def test_gsl_matrix_column()
+    assert_nothing_raised do
+      m = GSL_Matrix.create( 3, 5 )
+      m.set_with_arrays( [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] )
+
+      v = m.column(4)
+
+      assert v.values == [5.0, 10.0, 15.0]
+    end
+  end
+
+  def test_gsl_matrix_subrow()
+    assert_nothing_raised do
+      m = GSL_Matrix.create( 3, 5 )
+      m.set_with_arrays( [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] )
+
+      v = m.subrow(2,2,3)
+
+      assert v.values == [13.0, 14.0, 15.0]
+    end
+  end
+
+  # TODO: check that this is really how gsl_matrix_subcolumn
+  # is supposed to work...  I mean, really?  Returning contiguous
+  # data from a row, and not down the columns??
+  def test_gsl_matrix_subcolumn()
+    assert_nothing_raised do
+      m = GSL_Matrix.create( 3, 5 )
+      m.set_with_arrays( [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] )
+
+      v = m.subcolumn(1,0,3)
+
+      assert v.values == [2.0, 7.0, 12.0]
+    end
+  end
+
+  def test_gsl_matrix_diagonal()
+    assert_nothing_raised do
+      m = GSL_Matrix.create( 4, 8 )
+      m.set_all(0)
+      m.set_with_arrays( [[1,2,3,4],[16,15,14,13],[12,11,10,9],[5,6,7,8]] )
+
+      v = m.diagonal
+
+      assert v.values == [1.0, 15.0, 10.0, 8.0]
+    end
+  end
 
 
 end

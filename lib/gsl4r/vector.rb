@@ -233,6 +233,17 @@ module GSL4r
       
     end # class GSL_Vector_Cast
 
+    class GSL_Vector_View < FFI::Struct
+      layout :vector, GSL_Vector_Cast
+
+      def values
+	(0..self[:vector].length-1).to_a.collect { |i|
+	  ::GSL4r::Vector::Methods::gsl_vector_get( self[:vector], i )
+	}
+      end
+
+    end
+
     module Methods
       extend ::GSL4r::Util
       extend ::FFI::Library

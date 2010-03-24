@@ -83,7 +83,7 @@ module GSL4r
 	allvalues = []
 	
 	(0..r-1).each { |i|
-	  allvalues << alldata[(c*i),c]
+	  allvalues << alldata[(t*i),c]
 	}
 
 	return allvalues
@@ -100,7 +100,7 @@ module GSL4r
 	    store << j
 	    cc += 1
 	  }
-	  if ( cc < cl-1 ) # pad out any missing values
+	  if ( cc < cl ) # pad out any missing values
 	    (cc..cl-1).each { store << 0.0 }
 	  end
 	  cc = 0
@@ -219,6 +219,25 @@ module GSL4r
 	return allvalues
       end
 
+      # TODO: needs work
+      def set_with_arrays( a )
+	cc = 0
+	rl,cl,tl = length
+
+	store = Array.new
+	a.each { |i|
+	  i.each { |j|
+	    store << j
+	    cc += 1
+	  }
+	  if ( cc < cl ) # pad out any missing values
+	    (cc..cl-1).each { store << 0.0 }
+	  end
+	  cc = 0
+	}
+	self[:data].put_array_of_double(0,store)
+      end
+
 =begin
       def length
 	return self[:size]
@@ -276,6 +295,30 @@ module GSL4r
       
     end # class GSL_Matrix_Cast
 
+    class GSL_Matrix_View < ::FFI::Struct
+      layout :matrix, GSL_Matrix_Cast
+
+      def length
+	return self[:matrix][:size1], self[:matrix][:size2],
+	  self[:matrix][:tda]
+      end
+
+      def values
+	r,c,t = length
+
+	alldata = self[:matrix][:data].get_array_of_double(0, (t*c))
+
+	allvalues = []
+
+	(0..r-1).each { |i|
+	  allvalues << alldata[(t*i),c]
+	}
+
+	return allvalues
+      end
+
+    end # GSL_Matrix_View
+
     module Methods
       extend ::GSL4r::Util
       extend ::FFI::Library
@@ -285,13 +328,13 @@ module GSL4r
       # Utility routines related to handling matrices
       #
       # Creating matrices
-      attach_function :gsl_matrix_alloc, [:size_t,:size_t], :pointer
-      attach_function :gsl_matrix_calloc, [:size_t,:size_t], :pointer
-      attach_function :gsl_matrix_free, [:pointer], :void
+      attach_gsl_function :gsl_matrix_alloc, [:size_t,:size_t], :pointer
+      attach_gsl_function :gsl_matrix_calloc, [:size_t,:size_t], :pointer
+      attach_gsl_function :gsl_matrix_free, [:pointer], :void
 
       # Accessors
-      attach_function :gsl_matrix_get, [:pointer, :size_t, :size_t], :double
-      attach_function :gsl_matrix_set, [:pointer, :size_t, :size_t], :double
+      attach_gsl_function :gsl_matrix_get, [:pointer, :size_t, :size_t], :double
+      attach_gsl_function :gsl_matrix_set, [:pointer, :size_t, :size_t, :double], :void
 
       # Initializers
       attach_gsl_function :gsl_matrix_set_all, [:pointer, :double], :void
@@ -301,29 +344,41 @@ module GSL4r
       # Matrix views
       attach_gsl_function :gsl_matrix_submatrix,
 	[:pointer, :size_t, :size_t, :size_t, :size_t],
-	GSL_Matrix_Cast.by_value
+	::GSL4r::Matrix::GSL_Matrix_View.by_value
 
       attach_function :gsl_matrix_view_array, [:pointer, :size_t, :size_t],
-	GSL_Matrix_Cast.by_value
+	::GSL4r::Matrix::GSL_Matrix_View.by_value
 
       attach_function :gsl_matrix_view_array_with_tda,
 	[:pointer, :size_t, :size_t, :size_t],
-	GSL_Matrix_Cast.by_value
+	::GSL4r::Matrix::GSL_Matrix_View.by_value
 
       attach_function :gsl_matrix_view_vector, [:pointer, :size_t, :size_t],
-	GSL_Matrix_Cast.by_value
+	::GSL4r::Matrix::GSL_Matrix_View.by_value
 
       attach_function :gsl_matrix_view_vector_with_tda,
 	[:pointer, :size_t, :size_t, :size_t],
-	GSL_Matrix_Cast.by_value
+	::GSL4r::Matrix::GSL_Matrix_View.by_value
 
       attach_gsl_function :gsl_matrix_row,
 	[:pointer, :size_t],
-	::GSL4r::Vector::GSL_Vector_Cast.by_value
+	::GSL4r::Vector::GSL_Vector_View.by_value
 
       attach_gsl_function :gsl_matrix_column,
 	[:pointer, :size_t],
-	::GSL4r::Vector::GSL_Vector_Cast.by_value
+	::GSL4r::Vector::GSL_Vector_View.by_value
+
+      attach_gsl_function :gsl_matrix_subrow,
+	[:pointer, :size_t, :size_t, :size_t],
+	::GSL4r::Vector::GSL_Vector_View.by_value
+
+      attach_gsl_function :gsl_matrix_subcolumn,
+	[:pointer, :size_t, :size_t, :size_t],
+	::GSL4r::Vector::GSL_Vector_View.by_value
+
+      attach_gsl_function :gsl_matrix_diagonal,
+	[:pointer],
+	::GSL4r::Vector::GSL_Vector_View.by_value
 
     end
 
